@@ -55,7 +55,7 @@ type promise_resolver[R any] func(func(R), func(error))
 // New creates a new Promise with the provided resolver function.
 func New[R any](resolver promise_resolver[R]) *Promise[R] {
 	promise := Promise[R]{
-		ch:   make(chan any),
+		ch:   make(chan any, 1),
 		once: sync.Once{},
 	}
 	go func() {
