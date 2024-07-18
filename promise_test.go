@@ -82,7 +82,7 @@ func TestNew_awaitTwice(t *testing.T) {
 	if data2 != data {
 		t.Error("second await should return same value as first")
 	}
-	if err2 != nil {
-		t.Error("err2 supposed to be null")
+	if err2 != err {
+		t.Error("second await should return same error (nil) as first")
 	}
 }
