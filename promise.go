@@ -6,37 +6,33 @@ import (
 )
 
 type Promise[T any] struct {
-	ch_resolved_value chan T
-	ch_error          chan error
-	once              sync.Once
+	value T
+	err   error
+	once  sync.Once
+	ch    chan any
 }
 
 // Waits for the Promise to resolve or reject and returns the resolved value or an error.
 func (p *Promise[T]) Await() (T, error) {
-	var data T
-	var err error
-	select {
-	case data = <-p.ch_resolved_value:
-	case err = <-p.ch_error:
-	}
-	return data, err
+	<-p.ch
+	return p.value, p.err
 }
 
 // Resolves a promise by updating it with a value.
 func (p *Promise[T]) resolve(value T) {
 	p.once.Do(func() {
-		defer close(p.ch_resolved_value)
-		defer close(p.ch_error)
-		p.ch_resolved_value <- value
+		defer close(p.ch)
+		p.value = value
+		p.ch <- nil
 	})
 }
 
 // Rejects a promise by updating it with an error.
 func (p *Promise[T]) reject(err error) {
 	p.once.Do(func() {
-		defer close(p.ch_resolved_value)
-		defer close(p.ch_error)
-		p.ch_error <- err
+		defer close(p.ch)
+		p.err = err
+		p.ch <- nil
 	})
 }
 
@@ -59,9 +55,8 @@ type promise_resolver[R any] func(func(R), func(error))
 // New creates a new Promise with the provided resolver function.
 func New[R any](resolver promise_resolver[R]) *Promise[R] {
 	promise := Promise[R]{
-		ch_resolved_value: make(chan R),
-		ch_error:          make(chan error),
-		once:              sync.Once{},
+		ch:   make(chan any),
+		once: sync.Once{},
 	}
 	go func() {
 		defer promise.panic_handler()
