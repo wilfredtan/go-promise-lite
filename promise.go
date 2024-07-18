@@ -21,18 +21,16 @@ func (p *Promise[T]) Await() (T, error) {
 // Resolves a promise by updating it with a value.
 func (p *Promise[T]) resolve(value T) {
 	p.once.Do(func() {
-		defer close(p.ch)
 		p.value = value
-		p.ch <- nil
+		close(p.ch)
 	})
 }
 
 // Rejects a promise by updating it with an error.
 func (p *Promise[T]) reject(err error) {
 	p.once.Do(func() {
-		defer close(p.ch)
 		p.err = err
-		p.ch <- nil
+		close(p.ch)
 	})
 }
 
