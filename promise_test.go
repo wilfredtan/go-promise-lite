@@ -66,3 +66,23 @@ func TestNew_panicWithError(t *testing.T) {
 		t.Error("wrong error")
 	}
 }
+
+func TestNew_awaitTwice(t *testing.T) {
+	promise := New(func(resolve func(int), _ func(error)) {
+		resolve(5)
+	})
+	data, err := promise.Await()
+	data2, err2 := promise.Await()
+	if err != nil {
+		t.Error(err)
+	}
+	if data != 5 {
+		t.Error("wrong data")
+	}
+	if data2 != 0 {
+		t.Error("data2 not supposed to have value")
+	}
+	if err2 != nil {
+		t.Error("err2 supposed to be null")
+	}
+}
