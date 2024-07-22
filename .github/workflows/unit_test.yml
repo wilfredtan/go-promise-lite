@@ -55,13 +55,13 @@ jobs:
 
           # Get ready for git commit
           git config --global user.name 'Actions Runner'
-          git config --global user.email '23373389+wilfredtan@users.noreply.github.com'
+          git config --global user.email 'actions.runner@users.noreply.github.com'
           git fetch
           git checkout actions-badge -f
           git reset --hard @^1
 
           # Get coverage badge
-          curl "https://img.shields.io/badge/coverage-$COVERAGE%25-$COLOR" > badge.svg
+          curl "https://img.shields.io/badge/Coverage-$COVERAGE%25-$COLOR" > badge.svg
 
           # Add and commit the badge
           git add badge.svg

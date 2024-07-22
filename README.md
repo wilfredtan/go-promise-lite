@@ -1,5 +1,6 @@
 # A Simple Go Promise Library
-![Coverage](https://raw.githubusercontent.com/wilfredtan/promise/actions-badge/badge.svg)
+[![Build Status](https://github.com/wilfredtan/promise/actions/workflows/unit_test.yml/badge.svg)](https://github.com/wilfredtan/promise/actions) [![Coverage](https://raw.githubusercontent.com/wilfredtan/promise/actions-badge/badge.svg)](https://raw.githubusercontent.com/wilfredtan/promise/actions-badge/badge.svg)
+
 This library is a wrapper for writing Go routine functions. It is inspired by Javascript's "Promise" feature.
 
 Example code using the library:
