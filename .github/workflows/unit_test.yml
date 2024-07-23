@@ -29,18 +29,9 @@ jobs:
         with:
           path: coverage.out
           key: coverage-${{ hashFiles('coverage.out') }}
-  save_coverage:
-    runs-on: ubuntu-latest
-    needs: run_unit_test
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-      - name: Cache restore
-        uses: actions/cache/restore@v4
-        with:
-          path: coverage.out
-          key: coverage-${{ hashFiles('coverage.out') }}
-      - name: Save coverage
+      # Only generate coverage badge if there is change in coverage
+      - name: Generate coverage badge
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           # Get coverage percentage
           COVERAGE=`go tool cover -func=coverage.out | grep total: | grep -Eo '[0-9]+\.[0-9]+'`
